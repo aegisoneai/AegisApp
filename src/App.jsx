@@ -1,8 +1,17 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function AegisDashboardConcept() {
   const [activeView, setActiveView] = useState("Dashboard")
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+  const [showOnboarding, setShowOnboarding] = useState(false)
+  const [onboardingStep, setOnboardingStep] = useState(1)
+  useEffect(() => {
+    const completed = localStorage.getItem("aegis-onboarding-complete")
+
+    if (!completed) {
+      setShowOnboarding(true)
+    }
+  }, [])
 
   const portfolioSummary = {
     totalPositions: 20,
@@ -185,59 +194,246 @@ export default function AegisDashboardConcept() {
   ]
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex">
-      {/* Sidebar */}
-      {mobileMenuOpen && (
-        <button
-          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
-          onClick={() => setMobileMenuOpen(false)}
-          aria-label="Close menu"
-        />
-      )}
-      <aside className={`${mobileMenuOpen ? 'flex' : 'hidden'} lg:flex w-72 border-r border-slate-800 bg-slate-950/95 p-6 flex-col justify-between fixed lg:relative z-50 h-full`}>
-        <div>
-          <div className="mb-10">
-            <div className="text-2xl font-bold tracking-tight">Aegis One</div>
-            <div className="text-sm text-slate-400 mt-1">
-              Protected automation platform
+    <>
+      {showOnboarding && (
+        <div className="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-6">
+
+          <div className="w-full max-w-2xl rounded-3xl border border-slate-700 bg-slate-800 p-8 shadow-2xl">
+
+            <div className="flex items-center justify-between mb-8">
+              <div className="text-sm text-slate-300">
+                Step {onboardingStep} of 3
+              </div>
+
+              <div className="flex gap-2">
+                {[1, 2, 3].map((step) => (
+                  <div
+                    key={step}
+                    className={`h-2 w-8 rounded-full transition ${
+                      step <= onboardingStep
+                        ? "bg-emerald-400"
+                        : "bg-slate-600"
+                    }`}
+                  />
+                ))}
+              </div>
             </div>
-          </div>
 
-          <nav className="space-y-2">
-            {navItems.map((item) => (
-              <button
-                key={item}
-                onClick={() => {
-                  setActiveView(item)
-                  setMobileMenuOpen(false)
-                }}
-                className={`w-full text-left px-4 py-3 rounded-2xl transition ${
-                  item === activeView
-                    ? "bg-white text-slate-950 font-semibold"
-                    : "text-slate-300 hover:bg-slate-900"
-                }`}
-              >
-                {item}
-              </button>
-            ))}
-          </nav>
+            {/* Step 1 */}
+            {onboardingStep === 1 && (
+              <div>
+
+                <div className="text-sm uppercase tracking-wide text-slate-400">
+                  Welcome to Aegis One
+                </div>
+
+                <h1 className="text-3xl font-bold tracking-tight mt-4 text-white">
+                  Intelligent trading guidance designed around protection, clarity, and long-term confidence.
+                </h1>
+
+                <p className="text-slate-200 mt-6 text-lg leading-relaxed">
+                  Aegis helps simplify intelligent investing through calm guidance,
+                  visible protections, and explainable automation.
+                </p>
+
+                <div className="mt-10 flex justify-end">
+                  <button
+                    onClick={() => setOnboardingStep(2)}
+                    className="bg-white text-slate-950 px-6 py-3 rounded-2xl font-semibold hover:bg-slate-200 transition"
+                  >
+                    Get Started
+                  </button>
+                </div>
+
+              </div>
+            )}
+
+            {/* Step 2 */}
+            {onboardingStep === 2 && (
+              <div>
+
+                <div className="text-sm uppercase tracking-wide text-slate-500">
+                  Investment Goals
+                </div>
+
+                <h1 className="text-3xl font-bold tracking-tight mt-4 text-white">
+                  What best describes your current investing style?
+                </h1>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+
+                  {[
+                    "Long-Term Growth",
+                    "Passive Investing",
+                    "Balanced Growth",
+                    "Capital Preservation",
+                  ].map((goal) => (
+                    <button
+                      key={goal}
+                      onClick={() => setOnboardingStep(3)}
+                      className="rounded-2xl border border-slate-600 bg-slate-900 p-5 text-left hover:border-white hover:bg-slate-800 transition"
+                    >
+                      <div className="font-medium text-lg text-white">
+                        {goal}
+                      </div>
+                    </button>
+                  ))}
+
+                </div>
+
+              </div>
+            )}
+
+            {/* Step 3 */}
+            {onboardingStep === 3 && (
+              <div>
+
+                <div className="text-sm uppercase tracking-wide text-slate-500">
+                  Protection Philosophy
+                </div>
+
+                <h1 className="text-3xl font-bold tracking-tight mt-4">
+                  Aegis prioritizes protection-first automation and disciplined portfolio behavior.
+                </h1>
+
+                <p className="text-slate-400 mt-6 text-lg leading-relaxed">
+                  The platform is designed to reduce emotional investing behavior,
+                  improve operational clarity, and maintain visible protections whenever practical.
+                </p>
+
+                <div className="mt-10 flex items-center justify-between">
+
+                  <button
+                    onClick={() => setOnboardingStep(2)}
+                    className="text-slate-400 hover:text-white transition"
+                  >
+                    Back
+                  </button>
+
+                  <button
+                    onClick={() => {
+                      localStorage.setItem("aegis-onboarding-complete", "true")
+                      setShowOnboarding(false)
+                    }}
+                    className="bg-white text-slate-950 px-6 py-3 rounded-2xl font-semibold hover:bg-slate-200 transition"
+                  >
+                    Enter Workspace
+                  </button>
+
+                </div>
+
+              </div>
+            )}
+
+          </div>
         </div>
+      )}
 
-        <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-3xl p-4">
-          <div className="text-sm uppercase tracking-wide text-emerald-300">
-            Core Safety Layer
-          </div>
-          <div className="text-lg font-semibold text-emerald-100 mt-1">
-            Active
-          </div>
-          <p className="text-sm text-slate-300 mt-2">
-            Aegis protections remain online across active automation.
-          </p>
-        </div>
-      </aside>
+           <div className="min-h-screen bg-slate-950 text-white flex">
 
-      {/* Main Content */}
-      <main className="flex-1 p-5 md:p-8 overflow-y-auto">
+        {/* Sidebar Overlay */}
+        {mobileMenuOpen && (
+          <button
+            className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+            onClick={() => setMobileMenuOpen(false)}
+            aria-label="Close menu"
+          />
+        )}
+
+        {/* Sidebar */}
+        <aside className={`${mobileMenuOpen ? 'flex' : 'hidden'} lg:flex w-72 border-r border-slate-800 bg-slate-950/95 p-6 flex-col justify-between fixed lg:relative z-50 h-full`}>
+
+          <div>
+
+            <div className="mb-10">
+              <div className="flex items-start justify-between gap-4">
+
+                <div>
+                  <div className="text-2xl font-bold tracking-tight">
+                    Aegis One
+                  </div>
+
+                  <div className="text-sm text-slate-400 mt-1">
+                    Protected automation platform
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="lg:hidden rounded-xl border border-slate-700 px-3 py-2 text-sm text-slate-300"
+                >
+                  ✕
+                </button>
+
+              </div>
+            </div>
+
+            <nav className="space-y-2">
+              {navItems.map((item) => (
+                <button
+                  key={item}
+                  onClick={() => {
+                    setActiveView(item)
+                    setMobileMenuOpen(false)
+                  }}
+                  className={`w-full text-left px-4 py-3 rounded-2xl transition ${
+                    item === activeView
+                      ? "bg-white text-slate-950 font-semibold"
+                      : "text-slate-300 hover:bg-slate-900"
+                  }`}
+                >
+                  {item}
+                </button>
+              ))}
+            </nav>
+
+            <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+              <div className="text-sm text-slate-400">
+                System Status
+              </div>
+
+              <div className="mt-2 text-lg font-semibold text-emerald-400">
+                Protected & Stable
+              </div>
+
+              <div className="mt-2 text-sm text-slate-500">
+                All monitored systems operating normally.
+              </div>
+
+              <div className="mt-3 pt-3 border-t border-slate-800">
+                <button
+                  onClick={() => {
+                    localStorage.removeItem("aegis-onboarding-complete")
+                    setOnboardingStep(1)
+                    setShowOnboarding(true)
+                  }}
+                  className="text-xs uppercase tracking-wide text-slate-500 hover:text-slate-300 transition"
+                >
+                  Replay Onboarding
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-3xl p-4">
+            <div className="text-sm uppercase tracking-wide text-emerald-300">
+              Core Safety Layer
+            </div>
+
+            <div className="text-lg font-semibold text-emerald-100 mt-1">
+              Active
+            </div>
+
+            <p className="text-sm text-slate-300 mt-2">
+              Aegis protections remain online across active automation.
+            </p>
+          </div>
+
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-5 md:p-8 overflow-y-auto">
 
         <div className="lg:hidden mb-6">
           <button
@@ -247,6 +443,187 @@ export default function AegisDashboardConcept() {
             ☰ Menu
           </button>
         </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+            <div className="text-xs uppercase tracking-wide text-slate-500">
+              Protection Status
+            </div>
+            <div className="text-xl font-semibold mt-1">
+              {portfolioSummary.protectedPositions}/{portfolioSummary.totalPositions} Protected
+            </div>
+            <div className="text-sm text-emerald-400 mt-1">
+              All monitored positions protected
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+            <div className="text-xs uppercase tracking-wide text-slate-500">
+              Daily Risk
+            </div>
+            <div className="text-xl font-semibold mt-1">Normal</div>
+            <div className="text-sm text-slate-400 mt-1">
+              No attention needed
+            </div>
+          </div>
+
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
+            <div className="text-xs uppercase tracking-wide text-slate-500">
+              Aegis Guidance
+            </div>
+            <div className="text-xl font-semibold mt-1">Active</div>
+            <div className="text-sm text-slate-400 mt-1">
+              Monitoring market conditions
+            </div>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mb-6">
+
+  <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+    <div className="flex items-center justify-between">
+      <div>
+        <div className="text-sm uppercase tracking-wide text-slate-500">
+          Aegis Guidance
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-2">
+          Market Conditions Stable
+        </h2>
+      </div>
+
+      <div className="text-emerald-400 text-sm font-medium">
+        Active
+      </div>
+    </div>
+
+    <p className="text-slate-300 mt-4 leading-relaxed">
+      Market volatility remains within normal operating ranges today.
+      Aegis is maintaining standard protection behavior and controlled
+      exposure recommendations.
+    </p>
+
+    <div className="mt-5 rounded-2xl bg-slate-950/70 border border-slate-800 p-4">
+      <div className="text-sm text-slate-400">
+        Current Guidance
+      </div>
+
+      <div className="mt-2 text-white font-medium">
+        Maintain disciplined long-term positioning.
+      </div>
+    </div>
+  </div>
+
+  <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6">
+    <div className="flex items-center justify-between">
+      <div>
+        <div className="text-sm uppercase tracking-wide text-slate-500">
+          Protection Intelligence
+        </div>
+
+        <h2 className="text-2xl font-semibold mt-2">
+          Portfolio Fully Protected
+        </h2>
+      </div>
+
+      <div className="text-sky-400 text-sm font-medium">
+        Monitoring
+      </div>
+    </div>
+
+    <p className="text-slate-300 mt-4 leading-relaxed">
+      All monitored positions currently maintain active protection
+      coverage. No elevated operational risk conditions detected.
+    </p>
+
+    <div className="mt-5 rounded-2xl bg-slate-950/70 border border-slate-800 p-4">
+      <div className="text-sm text-slate-400">
+        Operational Status
+      </div>
+
+      <div className="mt-2 text-white font-medium">
+        Protection systems functioning normally.
+      </div>
+    </div>
+  </div>
+
+</div>
+
+      <div className="rounded-3xl border border-slate-800 bg-slate-900/70 p-6 mb-6">
+  <div className="flex items-center justify-between mb-6">
+    <div>
+      <div className="text-sm uppercase tracking-wide text-slate-500">
+        Operational Activity
+      </div>
+
+      <h2 className="text-2xl font-semibold mt-2">
+        Recent System Events
+      </h2>
+    </div>
+
+    <div className="text-sm text-slate-400">
+      Live Monitoring
+    </div>
+  </div>
+
+  <div className="space-y-4">
+
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="font-medium">
+            Protection review completed
+          </div>
+
+          <div className="text-sm text-slate-400 mt-1">
+            All monitored positions currently maintain active protection coverage.
+          </div>
+        </div>
+
+        <div className="text-xs text-slate-500 whitespace-nowrap">
+          2 min ago
+        </div>
+      </div>
+    </div>
+
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="font-medium">
+            Market volatility assessment updated
+          </div>
+
+          <div className="text-sm text-slate-400 mt-1">
+            Current volatility remains within standard operational ranges.
+          </div>
+        </div>
+
+        <div className="text-xs text-slate-500 whitespace-nowrap">
+          12 min ago
+        </div>
+      </div>
+    </div>
+
+    <div className="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="font-medium">
+            Aegis Guidance refreshed
+          </div>
+
+          <div className="text-sm text-slate-400 mt-1">
+            Long-term portfolio positioning remains aligned with current conditions.
+          </div>
+        </div>
+
+        <div className="text-xs text-slate-500 whitespace-nowrap">
+          24 min ago
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
 
         {activeView === "Research" ? (
           <div className="max-w-7xl mx-auto space-y-6">
@@ -1304,5 +1681,6 @@ export default function AegisDashboardConcept() {
         )}
       </main>
     </div>
-  )
+   </>
+)
 }
