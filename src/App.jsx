@@ -2,6 +2,8 @@ import { useState } from "react"
 
 export default function AegisDashboardConcept() {
   const [activeView, setActiveView] = useState("Dashboard")
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
   const portfolioSummary = {
     totalPositions: 20,
     displayedPositions: 3,
@@ -185,7 +187,14 @@ export default function AegisDashboardConcept() {
   return (
     <div className="min-h-screen bg-slate-950 text-white flex">
       {/* Sidebar */}
-      <aside className="hidden lg:flex w-72 border-r border-slate-800 bg-slate-950/95 p-6 flex-col justify-between">
+      {mobileMenuOpen && (
+        <button
+          className="fixed inset-0 bg-black/60 z-40 lg:hidden"
+          onClick={() => setMobileMenuOpen(false)}
+          aria-label="Close menu"
+        />
+      )}
+      <aside className={`${mobileMenuOpen ? 'flex' : 'hidden'} lg:flex w-72 border-r border-slate-800 bg-slate-950/95 p-6 flex-col justify-between fixed lg:relative z-50 h-full`}>
         <div>
           <div className="mb-10">
             <div className="text-2xl font-bold tracking-tight">Aegis One</div>
@@ -198,7 +207,10 @@ export default function AegisDashboardConcept() {
             {navItems.map((item) => (
               <button
                 key={item}
-                onClick={() => setActiveView(item)}
+                onClick={() => {
+                  setActiveView(item)
+                  setMobileMenuOpen(false)
+                }}
                 className={`w-full text-left px-4 py-3 rounded-2xl transition ${
                   item === activeView
                     ? "bg-white text-slate-950 font-semibold"
@@ -226,6 +238,16 @@ export default function AegisDashboardConcept() {
 
       {/* Main Content */}
       <main className="flex-1 p-5 md:p-8 overflow-y-auto">
+
+        <div className="lg:hidden mb-6">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-slate-800 transition"
+          >
+            ☰ Menu
+          </button>
+        </div>
+
         {activeView === "Research" ? (
           <div className="max-w-7xl mx-auto space-y-6">
             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
