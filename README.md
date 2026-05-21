@@ -1,16 +1,46 @@
-# React + Vite
+# AegisApp
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+AegisApp is the forward-facing platform application for the Aegis Trade Systems ecosystem.
 
-Currently, two official plugins are available:
+It is currently maintained as a LOCAL-DEV application and is not deployed to AWS production infrastructure yet.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Purpose
 
-## React Compiler
+AegisApp will eventually support the user-facing platform experience for:
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- guided automation
+- account and portfolio visibility
+- modular Aegis ecosystem access
+- explainable AI guidance
+- risk and protection visibility
+- future retail/professional platform workflows
 
-## Expanding the ESLint configuration
+## Current Environment Role
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+AegisApp is currently used for:
+
+- LOCAL-DEV design work
+- React/Vite interface development
+- platform experience prototyping
+- commercial product interface planning
+
+AegisApp should not currently be deployed to AWS-WEB-01 or AWS-STAGING unless a future deployment plan is approved.
+
+## Canonical Workflow
+
+LOCAL-DEV edit  
+↓  
+GitHub source control  
+↓  
+OneDrive deployment snapshot using approved AegisApp sync script  
+↓  
+Future deployment environment when approved
+
+## Development
+
+Run from LOCAL-DEV:
+
+```powershell
+cd C:\AegisApp
+npm install
+npm run dev
