@@ -1,32 +1,38 @@
-import { useEffect } from "react"
+import { useEffect } from "react";
 import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+
 import AppHeader from "./components/AppHeader";
-import { useAppStore } from "./state/appStore";
+import Sidebar from "./components/Sidebar";
 import NotificationDrawer from "./components/NotificationDrawer";
+import ProtectedRoute from "./components/ProtectedRoute";
+import LoginView from "./pages/LoginView";
+
+import { useAppStore } from "./state/appStore";
+import { useAuthStore } from "./state/authStore";
 
 import {
-  portfolioSummary,
   positions,
   activityEvents,
   protectionItems,
   riskSettings,
   researchCards,
   navItems,
-} from "./data/mockData"
+} from "./data/mockData";
 
-import DashboardView from "./pages/DashboardView"
-import PortfolioView from "./pages/PortfolioView"
-import ProtectionsView from "./pages/ProtectionsView"
-import ActivityView from "./pages/ActivityView"
-import GuidanceView from "./pages/GuidanceView"
-import ResearchView from "./pages/ResearchView"
-import SettingsView from "./pages/SettingsView"
-import Sidebar from "./components/Sidebar";
-
+import DashboardView from "./pages/DashboardView";
+import PortfolioView from "./pages/PortfolioView";
+import ProtectionsView from "./pages/ProtectionsView";
+import ActivityView from "./pages/ActivityView";
+import GuidanceView from "./pages/GuidanceView";
+import ResearchView from "./pages/ResearchView";
+import SettingsView from "./pages/SettingsView";
 
 export default function AegisDashboardConcept() {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
+
   const {
     mobileMenuOpen,
     showOnboarding,
@@ -37,6 +43,15 @@ export default function AegisDashboardConcept() {
     setOnboardingStep,
     setNotificationDrawerOpen,
   } = useAppStore();
+
+  useEffect(() => {
+    const completed = localStorage.getItem("aegis-onboarding-complete");
+
+    if (!completed && isAuthenticated) {
+      setShowOnboarding(true);
+    }
+  }, [isAuthenticated, setShowOnboarding]);
+
   const activeViewMap = {
     "/": "Dashboard",
     "/portfolio": "Portfolio",
@@ -47,8 +62,7 @@ export default function AegisDashboardConcept() {
     "/settings": "Settings",
   };
 
-  const activeView =
-    activeViewMap[location.pathname] || "Dashboard";
+  const activeView = activeViewMap[location.pathname] || "Dashboard";
 
   const fullPortfolio = [
     ...positions,
@@ -79,15 +93,136 @@ export default function AegisDashboardConcept() {
       status: "Protected",
       risk: "Low",
     },
-  ]
+  ];
+
+  const routeMap = {
+    Dashboard: "/",
+    Portfolio: "/portfolio",
+    Protections: "/protections",
+    Activity: "/activity",
+    "Aegis Guidance": "/guidance",
+    Research: "/research",
+    Settings: "/settings",
+  };
+
+  const appShell = (
+    <div className="min-h-screen bg-slate-950 text-white flex">
+      <Sidebar
+        navItems={navItems}
+        activeView={activeView}
+        setActiveView={(view) => {
+          navigate(routeMap[view] || "/");
+        }}
+        mobileMenuOpen={mobileMenuOpen}
+        setMobileMenuOpen={setMobileMenuOpen}
+        setOnboardingStep={setOnboardingStep}
+        setShowOnboarding={setShowOnboarding}
+      />
+
+      <main className="flex-1 p-5 md:p-8 overflow-y-auto">
+        <div className="lg:hidden mb-6">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-slate-800 transition"
+          >
+            ☰ Menu
+          </button>
+        </div>
+
+        <div className="max-w-7xl mx-auto">
+          <AppHeader />
+        </div>
+
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <DashboardView />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/portfolio"
+            element={
+              <ProtectedRoute>
+                <PortfolioView
+                  fullPortfolio={fullPortfolio}
+                  setActiveView={() => { }}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/protections"
+            element={
+              <ProtectedRoute>
+                <ProtectionsView
+                  protectionItems={protectionItems}
+                  setActiveView={() => { }}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/activity"
+            element={
+              <ProtectedRoute>
+                <ActivityView
+                  activityEvents={activityEvents}
+                  setActiveView={() => { }}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/guidance"
+            element={
+              <ProtectedRoute>
+                <GuidanceView setActiveView={() => { }} />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/research"
+            element={
+              <ProtectedRoute>
+                <ResearchView
+                  researchCards={researchCards}
+                  setActiveView={() => { }}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <SettingsView
+                  riskSettings={riskSettings}
+                  setActiveView={() => { }}
+                />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+    </div>
+  );
 
   return (
     <>
-      {showOnboarding && (
+      {showOnboarding && isAuthenticated && (
         <div className="fixed inset-0 z-[100] bg-slate-950/90 backdrop-blur-sm flex items-center justify-center p-6">
-
           <div className="w-full max-w-2xl rounded-3xl border border-slate-700 bg-slate-800 p-8 shadow-2xl">
-
             <div className="flex items-center justify-between mb-8">
               <div className="text-sm text-slate-300">
                 Step {onboardingStep} of 3
@@ -97,19 +232,15 @@ export default function AegisDashboardConcept() {
                 {[1, 2, 3].map((step) => (
                   <div
                     key={step}
-                    className={`h-2 w-8 rounded-full transition ${step <= onboardingStep
-                      ? "bg-emerald-400"
-                      : "bg-slate-600"
+                    className={`h-2 w-8 rounded-full transition ${step <= onboardingStep ? "bg-emerald-400" : "bg-slate-600"
                       }`}
                   />
                 ))}
               </div>
             </div>
 
-            {/* Step 1 */}
             {onboardingStep === 1 && (
               <div>
-
                 <div className="text-sm uppercase tracking-wide text-slate-400">
                   Welcome to Aegis One
                 </div>
@@ -131,14 +262,11 @@ export default function AegisDashboardConcept() {
                     Get Started
                   </button>
                 </div>
-
               </div>
             )}
 
-            {/* Step 2 */}
             {onboardingStep === 2 && (
               <div>
-
                 <div className="text-sm uppercase tracking-wide text-slate-500">
                   Investment Goals
                 </div>
@@ -148,7 +276,6 @@ export default function AegisDashboardConcept() {
                 </h1>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-
                   {[
                     "Long-Term Growth",
                     "Passive Investing",
@@ -165,16 +292,12 @@ export default function AegisDashboardConcept() {
                       </div>
                     </button>
                   ))}
-
                 </div>
-
               </div>
             )}
 
-            {/* Step 3 */}
             {onboardingStep === 3 && (
               <div>
-
                 <div className="text-sm uppercase tracking-wide text-slate-500">
                   Protection Philosophy
                 </div>
@@ -189,7 +312,6 @@ export default function AegisDashboardConcept() {
                 </p>
 
                 <div className="mt-10 flex items-center justify-between">
-
                   <button
                     onClick={() => setOnboardingStep(2)}
                     className="text-slate-400 hover:text-white transition"
@@ -199,19 +321,16 @@ export default function AegisDashboardConcept() {
 
                   <button
                     onClick={() => {
-                      localStorage.setItem("aegis-onboarding-complete", "true")
-                      setShowOnboarding(false)
+                      localStorage.setItem("aegis-onboarding-complete", "true");
+                      setShowOnboarding(false);
                     }}
                     className="bg-white text-slate-950 px-6 py-3 rounded-2xl font-semibold hover:bg-slate-200 transition"
                   >
                     Enter Workspace
                   </button>
-
                 </div>
-
               </div>
             )}
-
           </div>
         </div>
       )}
@@ -221,113 +340,13 @@ export default function AegisDashboardConcept() {
         onClose={() => setNotificationDrawerOpen(false)}
       />
 
-      <div className="min-h-screen bg-slate-950 text-white flex">
-
-        <Sidebar
-          navItems={navItems}
-          activeView={activeView}
-          setActiveView={(view) => {
-            const routeMap = {
-              Dashboard: "/",
-              Portfolio: "/portfolio",
-              Protections: "/protections",
-              Activity: "/activity",
-              "Aegis Guidance": "/guidance",
-              Research: "/research",
-              Settings: "/settings",
-            };
-
-            navigate(routeMap[view] || "/");
-          }}
-          mobileMenuOpen={mobileMenuOpen}
-          setMobileMenuOpen={setMobileMenuOpen}
-          setOnboardingStep={setOnboardingStep}
-          setShowOnboarding={setShowOnboarding}
+      <Routes>
+        <Route path="/login" element={<LoginView />} />
+        <Route
+          path="/*"
+          element={isAuthenticated ? appShell : <Navigate to="/login" replace />}
         />
-
-        {/* Main Content */}
-        <main className="flex-1 p-5 md:p-8 overflow-y-auto">
-
-          <div className="lg:hidden mb-6">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="bg-slate-900 border border-slate-700 px-4 py-3 rounded-2xl text-sm font-medium hover:bg-slate-800 transition"
-            >
-              ☰ Menu
-            </button>
-          </div>
-
-          <div className="max-w-7xl mx-auto">
-            <AppHeader />
-          </div>
-
-          <Routes>
-            <Route path="/" element={<DashboardView />} />
-
-            <Route
-              path="/portfolio"
-              element={
-                <PortfolioView
-                  fullPortfolio={fullPortfolio}
-                  setActiveView={() => { }}
-                />
-              }
-            />
-
-            <Route
-              path="/protections"
-              element={
-                <ProtectionsView
-                  protectionItems={protectionItems}
-                  setActiveView={() => { }}
-                />
-              }
-            />
-
-            <Route
-              path="/activity"
-              element={
-                <ActivityView
-                  activityEvents={activityEvents}
-                  setActiveView={() => { }}
-                />
-              }
-            />
-
-            <Route
-              path="/guidance"
-              element={
-                <GuidanceView
-                  setActiveView={() => { }}
-                />
-              }
-            />
-
-            <Route
-              path="/research"
-              element={
-                <ResearchView
-                  researchCards={researchCards}
-                  setActiveView={() => { }}
-                />
-              }
-            />
-
-            <Route
-              path="/settings"
-              element={
-                <SettingsView
-                  riskSettings={riskSettings}
-                  setActiveView={() => { }}
-                />
-              }
-            />
-
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-
-        </main>
-      </div >
+      </Routes>
     </>
-  )
+  );
 }

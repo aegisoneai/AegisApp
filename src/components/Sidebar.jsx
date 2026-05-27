@@ -1,6 +1,8 @@
 import { theme } from "../theme";
 import DashboardPanel from "./DashboardPanel";
 import NavigationButton from "./NavigationButton";
+import UserProfilePanel from "./UserProfilePanel";
+import { useAuthStore } from "../state/authStore";
 
 export default function Sidebar({
     navItems,
@@ -11,6 +13,18 @@ export default function Sidebar({
     setOnboardingStep,
     setShowOnboarding,
 }) {
+
+    const user = useAuthStore((state) => state.user);
+
+    const filteredNavItems = navItems.filter((item) => {
+
+        if (item === "Research") {
+            return user?.permissions?.strategyResearch;
+        }
+
+        return true;
+    });
+
     return (
         <>
             {mobileMenuOpen && (
@@ -47,7 +61,7 @@ export default function Sidebar({
                     </div>
 
                     <nav className="space-y-2">
-                        {navItems.map((item) => (
+                        {filteredNavItems.map((item) => (
                             <NavigationButton
                                 key={item}
                                 active={item === activeView}
@@ -90,6 +104,7 @@ export default function Sidebar({
                 </div>
 
                 <DashboardPanel className="bg-emerald-500/10 border-emerald-500/30 mt-6">
+                    <UserProfilePanel />
                     <div className="text-sm uppercase tracking-wide text-emerald-300">
                         Core Safety Layer
                     </div>

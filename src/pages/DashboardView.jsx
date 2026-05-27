@@ -7,8 +7,12 @@ import ProtectionIntelligenceSection from "../features/dashboard/components/Prot
 import OperationalHealthSection from "../features/dashboard/components/OperationalHealthSection";
 import GuidanceSummarySection from "../features/dashboard/components/GuidanceSummarySection";
 import DashboardSectionGrid from "../components/DashboardSectionGrid";
+import { useAuthStore } from "../state/authStore";
+import ProfessionalTelemetrySection from "../features/dashboard/components/ProfessionalTelemetrySection";
 
 export default function DashboardView() {
+    const user = useAuthStore((state) => state.user);
+    const professionalMode = user?.permissions?.professionalMode;
     const portfolioSummary = getPortfolioSummary();
     const telemetrySummary = getTelemetrySummary();
 
@@ -39,6 +43,7 @@ export default function DashboardView() {
                 <GuidanceSummarySection />
             </DashboardSectionGrid>
 
+            {professionalMode && <ProfessionalTelemetrySection />}
             <RecentActivitySection />
         </div>
     );

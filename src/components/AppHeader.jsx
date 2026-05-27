@@ -2,6 +2,7 @@ import { useLocation } from "react-router-dom";
 import { theme } from "../theme";
 import { useNotificationStore } from "../state/notificationStore";
 import { useAppStore } from "../state/appStore";
+import { useAuthStore } from "../state/authStore";
 
 const routeMeta = {
     "/": {
@@ -37,6 +38,8 @@ const routeMeta = {
 export default function AppHeader() {
     const location = useLocation();
     const meta = routeMeta[location.pathname] || routeMeta["/"];
+    const user = useAuthStore((state) => state.user);
+    const professionalMode = user?.permissions?.professionalMode;
     const notifications = useNotificationStore((state) => state.notifications);
     const unreadCount = notifications.filter((item) => !item.read).length;
     const setNotificationDrawerOpen = useAppStore(
@@ -63,6 +66,12 @@ export default function AppHeader() {
                     <div className="px-4 py-2 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-medium">
                         Protected Runtime
                     </div>
+
+                    {professionalMode && (
+                        <div className="px-4 py-2 rounded-2xl border border-sky-500/30 bg-sky-500/10 text-sky-300 text-sm font-medium">
+                            Professional Mode
+                        </div>
+                    )}
 
                     <button
                         onClick={() => setNotificationDrawerOpen(true)}
