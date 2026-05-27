@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 
 import {
   portfolioSummary,
@@ -21,7 +22,20 @@ import Sidebar from "./components/Sidebar";
 
 
 export default function AegisDashboardConcept() {
-  const [activeView, setActiveView] = useState("Dashboard")
+  const navigate = useNavigate();
+  const location = useLocation();
+  const activeViewMap = {
+    "/": "Dashboard",
+    "/portfolio": "Portfolio",
+    "/protections": "Protections",
+    "/activity": "Activity",
+    "/guidance": "Aegis Guidance",
+    "/research": "Research",
+    "/settings": "Settings",
+  };
+
+  const activeView =
+    activeViewMap[location.pathname] || "Dashboard";
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [showOnboarding, setShowOnboarding] = useState(false)
   const [onboardingStep, setOnboardingStep] = useState(1)
@@ -204,7 +218,19 @@ export default function AegisDashboardConcept() {
         <Sidebar
           navItems={navItems}
           activeView={activeView}
-          setActiveView={setActiveView}
+          setActiveView={(view) => {
+            const routeMap = {
+              Dashboard: "/",
+              Portfolio: "/portfolio",
+              Protections: "/protections",
+              Activity: "/activity",
+              "Aegis Guidance": "/guidance",
+              Research: "/research",
+              Settings: "/settings",
+            };
+
+            navigate(routeMap[view] || "/");
+          }}
           mobileMenuOpen={mobileMenuOpen}
           setMobileMenuOpen={setMobileMenuOpen}
           setOnboardingStep={setOnboardingStep}
@@ -223,159 +249,71 @@ export default function AegisDashboardConcept() {
             </button>
           </div>
 
-          {activeView === "Research" ? (
-            <div className="max-w-7xl mx-auto space-y-6">
-              <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-4">
-                <div>
-                  <h1 className="text-4xl font-bold tracking-tight">Research</h1>
-                  <p className="text-slate-400 mt-2 text-lg">
-                    A governed validation workspace for strategy testing, research review, and future confidence-building reports.
-                  </p>
-                </div>
+          <Routes>
+            <Route path="/" element={<DashboardView />} />
 
-                <button
-                  onClick={() => setActiveView("Dashboard")}
-                  className="bg-slate-800 px-5 py-3 rounded-2xl font-medium hover:bg-slate-700 transition"
-                >
-                  Back to Dashboard
-                </button>
-              </div>
-
-              <div className="bg-blue-500/10 border border-blue-500/30 rounded-3xl p-6">
-                <div className="text-blue-200 font-semibold text-lg">Research is separated from live automation</div>
-                <p className="text-slate-300 mt-2 leading-relaxed">
-                  Aegis Research should help users understand strategy quality through validation, simulation, and reporting without allowing untested behavior to affect live execution.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 xl:grid-cols-4 gap-4">
-                {researchCards.map((card) => (
-                  <div key={card.title} className="bg-slate-900 border border-slate-800 rounded-3xl p-5 shadow-xl">
-                    <div className="text-slate-400 text-sm">{card.title}</div>
-                    <div className="text-3xl font-bold mt-2">{card.value}</div>
-                    <p className="text-slate-300 mt-3 leading-relaxed">{card.description}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                  <h2 className="text-2xl font-semibold">Strategy Validation Pipeline</h2>
-                  <p className="text-slate-400 mt-2">
-                    Aegis should make strategy confidence understandable without implying unrealistic certainty.
-                  </p>
-
-                  <div className="space-y-4 mt-6">
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                      <div className="text-slate-400 text-sm">Step 1</div>
-                      <div className="font-semibold text-lg mt-1">Historical Backtest</div>
-                      <p className="text-slate-300 mt-1">Test behavior across prior market conditions.</p>
-                    </div>
-
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                      <div className="text-slate-400 text-sm">Step 2</div>
-                      <div className="font-semibold text-lg mt-1">Walk-Forward Validation</div>
-                      <p className="text-slate-300 mt-1">Check whether performance survives outside the training period.</p>
-                    </div>
-
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                      <div className="text-slate-400 text-sm">Step 3</div>
-                      <div className="font-semibold text-lg mt-1">Risk Governance Review</div>
-                      <p className="text-slate-300 mt-1">Confirm strategy behavior respects Aegis risk and protection standards.</p>
-                    </div>
-
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                      <div className="text-slate-400 text-sm">Step 4</div>
-                      <div className="font-semibold text-lg mt-1">Paper Validation</div>
-                      <p className="text-slate-300 mt-1">Observe behavior safely before live consideration.</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                  <h2 className="text-2xl font-semibold">Research Summary</h2>
-                  <p className="text-slate-400 mt-2">
-                    Retail users should see useful research summaries without being forced into professional analytics overload.
-                  </p>
-
-                  <div className="space-y-4 mt-6">
-                    <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-2xl p-5">
-                      <div className="text-emerald-300 font-medium">Current Research Position</div>
-                      <div className="text-2xl font-bold mt-2">Validation First</div>
-                      <p className="text-slate-300 mt-2">
-                        Aegis prioritizes evidence, survivability, and risk discipline before expanding strategy automation.
-                      </p>
-                    </div>
-
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                      <div className="text-slate-400 text-sm">What users should understand</div>
-                      <p className="text-slate-300 mt-2">
-                        Strong backtest results are not enough. Strategies must survive changing market conditions and realistic execution assumptions.
-                      </p>
-                    </div>
-
-                    <div className="bg-slate-950 border border-slate-800 rounded-2xl p-5">
-                      <div className="text-slate-400 text-sm">What Aegis avoids</div>
-                      <p className="text-slate-300 mt-2">
-                        Aegis avoids hype-driven prediction claims, over-optimized strategies, and unvalidated live behavior.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="bg-slate-900 border border-slate-800 rounded-3xl p-6 shadow-xl">
-                <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-5">
-                  <div>
-                    <h2 className="text-2xl font-semibold">Future Research Reports</h2>
-                    <p className="text-slate-400 mt-2 max-w-4xl leading-relaxed">
-                      This screen can later generate retail-friendly and professional-grade validation reports showing performance, drawdown, slippage sensitivity, regime behavior, and promotion readiness.
-                    </p>
-                  </div>
-
-                  <div className="flex flex-wrap gap-3">
-                    <button className="bg-white text-slate-950 px-5 py-3 rounded-2xl font-medium hover:opacity-90 transition">
-                      View Sample Report
-                    </button>
-                    <button className="bg-slate-800 px-5 py-3 rounded-2xl font-medium hover:bg-slate-700 transition">
-                      Compare Strategies
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          ) : activeView === "Settings" ? (
-            <SettingsView
-              riskSettings={riskSettings}
-              setActiveView={setActiveView}
+            <Route
+              path="/portfolio"
+              element={
+                <PortfolioView
+                  fullPortfolio={fullPortfolio}
+                  setActiveView={() => { }}
+                />
+              }
             />
-          ) : activeView === "Activity" ? (
-            <ActivityView
-              activityEvents={activityEvents}
-              setActiveView={setActiveView}
+
+            <Route
+              path="/protections"
+              element={
+                <ProtectionsView
+                  protectionItems={protectionItems}
+                  setActiveView={() => { }}
+                />
+              }
             />
-          ) : activeView === "Aegis Guidance" ? (
-            <GuidanceView
-              setActiveView={setActiveView}
+
+            <Route
+              path="/activity"
+              element={
+                <ActivityView
+                  activityEvents={activityEvents}
+                  setActiveView={() => { }}
+                />
+              }
             />
-          ) : activeView === "Protections" ? (
-            <ProtectionsView
-              protectionItems={protectionItems}
-              setActiveView={setActiveView}
+
+            <Route
+              path="/guidance"
+              element={
+                <GuidanceView
+                  setActiveView={() => { }}
+                />
+              }
             />
-          ) : activeView === "Portfolio" ? (
-            <PortfolioView
-              fullPortfolio={fullPortfolio}
-              setActiveView={setActiveView}
+
+            <Route
+              path="/research"
+              element={
+                <ResearchView
+                  researchCards={researchCards}
+                  setActiveView={() => { }}
+                />
+              }
             />
-          ) : activeView === "Research" ? (
-            <ResearchView
-              researchCards={researchCards}
-              setActiveView={setActiveView}
+
+            <Route
+              path="/settings"
+              element={
+                <SettingsView
+                  riskSettings={riskSettings}
+                  setActiveView={() => { }}
+                />
+              }
             />
-          ) : (
-            <DashboardView />
-          )}
+
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+
         </main>
       </div >
     </>
