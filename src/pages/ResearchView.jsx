@@ -1,14 +1,9 @@
-import PageHeader from "../components/PageHeader";
 import SectionCard from "../components/SectionCard";
 import StatusCard from "../components/StatusCard";
 
 export default function ResearchView() {
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <PageHeader
-                title="Research"
-                subtitle="Governed research visibility focused on validation, survivability, and explainable strategy analysis."
-            />
 
             <SectionCard
                 title="Research Status"

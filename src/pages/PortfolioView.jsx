@@ -1,4 +1,3 @@
-import PageHeader from "../components/PageHeader";
 import StatusCard from "../components/StatusCard";
 import SectionCard from "../components/SectionCard";
 import DataTable from "../components/DataTable";
@@ -6,10 +5,6 @@ import DataTable from "../components/DataTable";
 export default function PortfolioView() {
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <PageHeader
-                title="Portfolio"
-                subtitle="A simple view of protected portfolio exposure, allocation health, and position awareness."
-            />
 
             <SectionCard
                 title="Portfolio Summary"

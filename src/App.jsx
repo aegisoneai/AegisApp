@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
+import AppHeader from "./components/AppHeader";
 
 import {
   portfolioSummary,
@@ -247,6 +248,10 @@ export default function AegisDashboardConcept() {
             >
               ☰ Menu
             </button>
+          </div>
+
+          <div className="max-w-7xl mx-auto">
+            <AppHeader />
           </div>
 
           <Routes>

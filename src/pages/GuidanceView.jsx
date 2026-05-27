@@ -1,13 +1,8 @@
-import PageHeader from "../components/PageHeader";
 import SectionCard from "../components/SectionCard";
 
 export default function GuidanceView() {
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <PageHeader
-                title="Aegis Guidance"
-                subtitle="Plain-language operational guidance designed to explain what Aegis is seeing and why it matters."
-            />
 
             <SectionCard
                 title="Current Guidance"

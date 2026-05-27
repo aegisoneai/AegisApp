@@ -1,14 +1,9 @@
-import PageHeader from "../components/PageHeader";
 import StatusCard from "../components/StatusCard";
 import SectionCard from "../components/SectionCard";
 
 export default function ProtectionsView() {
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <PageHeader
-                title="Protections"
-                subtitle="Visibility into the systems actively protecting portfolio capital and operational stability."
-            />
 
             <SectionCard
                 title="Protection Status"

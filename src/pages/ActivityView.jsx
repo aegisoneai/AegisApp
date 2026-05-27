@@ -1,13 +1,8 @@
-import PageHeader from "../components/PageHeader";
 import SectionCard from "../components/SectionCard";
 
 export default function ActivityView() {
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <PageHeader
-                title="Activity"
-                subtitle="Operational visibility into recent platform events, execution activity, and protection behavior."
-            />
 
             <SectionCard
                 title="Recent Activity"

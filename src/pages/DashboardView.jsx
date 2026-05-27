@@ -1,5 +1,3 @@
-import PageHeader from "../components/PageHeader";
-
 import { getPortfolioSummary, getTelemetrySummary } from "../services";
 import RuntimeBanner from "../components/RuntimeBanner";
 import RecentActivitySection from "../features/dashboard/components/RecentActivitySection";
@@ -16,10 +14,6 @@ export default function DashboardView() {
 
     return (
         <div className="max-w-7xl mx-auto space-y-6">
-            <PageHeader
-                title="Dashboard"
-                subtitle="A calm overview of portfolio health, automation status, protections, and recent activity."
-            />
 
             <RuntimeBanner
                 status="Protected & Stable"
