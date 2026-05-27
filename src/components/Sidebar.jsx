@@ -1,3 +1,7 @@
+import { theme } from "../theme";
+import DashboardPanel from "./DashboardPanel";
+import NavigationButton from "./NavigationButton";
+
 export default function Sidebar({
     navItems,
     activeView,
@@ -9,7 +13,6 @@ export default function Sidebar({
 }) {
     return (
         <>
-            {/* Sidebar Overlay */}
             {mobileMenuOpen && (
                 <button
                     className="fixed inset-0 z-40 bg-black/60 lg:hidden"
@@ -18,21 +21,18 @@ export default function Sidebar({
                 />
             )}
 
-            {/* Sidebar */}
             <aside
-                className={`${mobileMenuOpen ? 'flex' : 'hidden'} lg:flex fixed lg:static inset-y-0 left-0 z-50 w-72 max-w-[85vw] h-dvh lg:h-auto flex-col border-r border-slate-800 bg-slate-950/95 backdrop-blur-xl overflow-y-auto`}
+                className={`${mobileMenuOpen ? "flex" : "hidden"} lg:flex fixed lg:static inset-y-0 left-0 z-50 w-72 max-w-[85vw] h-dvh lg:h-auto flex-col border-r border-slate-800 bg-slate-950/95 backdrop-blur-xl overflow-y-auto`}
             >
                 <div>
-
                     <div className="mb-10">
                         <div className="flex items-start justify-between gap-4">
-
                             <div>
-                                <div className="text-2xl font-bold tracking-tight">
+                                <div className={theme.typography.pageTitle}>
                                     Aegis One
                                 </div>
 
-                                <div className="text-sm text-slate-400 mt-1">
+                                <div className={`${theme.typography.small} mt-1`}>
                                     Protected automation platform
                                 </div>
                             </div>
@@ -43,30 +43,26 @@ export default function Sidebar({
                             >
                                 ✕
                             </button>
-
                         </div>
                     </div>
 
                     <nav className="space-y-2">
                         {navItems.map((item) => (
-                            <button
+                            <NavigationButton
                                 key={item}
+                                active={item === activeView}
                                 onClick={() => {
-                                    setActiveView(item)
-                                    setMobileMenuOpen(false)
+                                    setActiveView(item);
+                                    setMobileMenuOpen(false);
                                 }}
-                                className={`w-full text-left px-4 py-3 rounded-2xl transition ${item === activeView
-                                        ? "bg-white text-slate-950 font-semibold"
-                                        : "text-slate-300 hover:bg-slate-900"
-                                    }`}
                             >
                                 {item}
-                            </button>
+                            </NavigationButton>
                         ))}
                     </nav>
 
-                    <div className="mt-8 rounded-2xl border border-slate-800 bg-slate-900/70 p-4">
-                        <div className="text-sm text-slate-400">
+                    <DashboardPanel className="mt-8">
+                        <div className={theme.typography.small}>
                             System Status
                         </div>
 
@@ -74,27 +70,26 @@ export default function Sidebar({
                             Protected & Stable
                         </div>
 
-                        <div className="mt-2 text-sm text-slate-500">
+                        <div className={`${theme.colors.subtle} text-sm mt-2`}>
                             All monitored systems operating normally.
                         </div>
 
                         <div className="mt-3 pt-3 border-t border-slate-800">
                             <button
                                 onClick={() => {
-                                    localStorage.removeItem("aegis-onboarding-complete")
-                                    setOnboardingStep(1)
-                                    setShowOnboarding(true)
+                                    localStorage.removeItem("aegis-onboarding-complete");
+                                    setOnboardingStep(1);
+                                    setShowOnboarding(true);
                                 }}
-                                className="text-xs uppercase tracking-wide text-slate-500 hover:text-slate-300 transition"
+                                className={`${theme.colors.subtle} text-xs uppercase tracking-wide hover:text-slate-300 transition`}
                             >
                                 Replay Onboarding
                             </button>
                         </div>
-                    </div>
-
+                    </DashboardPanel>
                 </div>
 
-                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-3xl p-4">
+                <DashboardPanel className="bg-emerald-500/10 border-emerald-500/30 mt-6">
                     <div className="text-sm uppercase tracking-wide text-emerald-300">
                         Core Safety Layer
                     </div>
@@ -106,9 +101,8 @@ export default function Sidebar({
                     <p className="text-sm text-slate-300 mt-2">
                         Aegis protections remain online across active automation.
                     </p>
-                </div>
-
+                </DashboardPanel>
             </aside>
         </>
-    )
+    );
 }

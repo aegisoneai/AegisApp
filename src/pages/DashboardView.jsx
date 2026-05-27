@@ -6,6 +6,9 @@ import RecentActivitySection from "../features/dashboard/components/RecentActivi
 import PortfolioOverviewSection from "../features/dashboard/components/PortfolioOverviewSection";
 import SystemStatusSection from "../features/dashboard/components/SystemStatusSection";
 import ProtectionIntelligenceSection from "../features/dashboard/components/ProtectionIntelligenceSection";
+import OperationalHealthSection from "../features/dashboard/components/OperationalHealthSection";
+import GuidanceSummarySection from "../features/dashboard/components/GuidanceSummarySection";
+import DashboardSectionGrid from "../components/DashboardSectionGrid";
 
 export default function DashboardView() {
     const portfolioSummary = getPortfolioSummary();
@@ -28,13 +31,21 @@ export default function DashboardView() {
                 detail={telemetrySummary.detail}
             />
 
-            <PortfolioOverviewSection
-                portfolioValue={portfolioSummary.portfolioValue}
-                dailyChange={portfolioSummary.dailyChange}
-                activeProtections={portfolioSummary.activeProtections}
-            />
-            <ProtectionIntelligenceSection />
+            <DashboardSectionGrid>
+                <PortfolioOverviewSection
+                    portfolioValue={portfolioSummary.portfolioValue}
+                    dailyChange={portfolioSummary.dailyChange}
+                    activeProtections={portfolioSummary.activeProtections}
+                />
+                <ProtectionIntelligenceSection />
+            </DashboardSectionGrid>
+
+            <DashboardSectionGrid>
+                <OperationalHealthSection />
+                <GuidanceSummarySection />
+            </DashboardSectionGrid>
+
             <RecentActivitySection />
         </div>
     );
-}
+}   
