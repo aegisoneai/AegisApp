@@ -1,12 +1,13 @@
 import PageHeader from "../components/PageHeader";
-import StatusCard from "../components/StatusCard";
-import SectionCard from "../components/SectionCard";
 
 import { getPortfolioSummary, getTelemetrySummary } from "../services";
 import RuntimeBanner from "../components/RuntimeBanner";
+import RecentActivitySection from "../features/dashboard/components/RecentActivitySection";
+import PortfolioOverviewSection from "../features/dashboard/components/PortfolioOverviewSection";
+import SystemStatusSection from "../features/dashboard/components/SystemStatusSection";
+import ProtectionIntelligenceSection from "../features/dashboard/components/ProtectionIntelligenceSection";
 
 export default function DashboardView() {
-
     const portfolioSummary = getPortfolioSummary();
     const telemetrySummary = getTelemetrySummary();
 
@@ -16,42 +17,24 @@ export default function DashboardView() {
                 title="Dashboard"
                 subtitle="A calm overview of portfolio health, automation status, protections, and recent activity."
             />
+
             <RuntimeBanner
                 status="Protected & Stable"
                 detail="Telemetry systems and governed protections are operating normally."
             />
-            <StatusCard
-                label="System Status"
-                value={telemetrySummary.runtimeStatus}
+
+            <SystemStatusSection
+                runtimeStatus={telemetrySummary.runtimeStatus}
                 detail={telemetrySummary.detail}
-                tone="good"
             />
 
-            <SectionCard
-                title="Portfolio Overview"
-                subtitle="High-level portfolio visibility with calm operational summaries."
-            >
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <StatusCard
-                        label="Portfolio Value"
-                        value={portfolioSummary.portfolioValue}
-                        detail="Across all protected allocations."
-                    />
-
-                    <StatusCard
-                        label="Daily Change"
-                        value={portfolioSummary.dailyChange}
-                        detail="Stable upward movement today."
-                        tone="good"
-                    />
-
-                    <StatusCard
-                        label="Active Protections"
-                        value={portfolioSummary.activeProtections}
-                        detail="Monitoring stops and lifecycle controls."
-                    />
-                </div>
-            </SectionCard>
+            <PortfolioOverviewSection
+                portfolioValue={portfolioSummary.portfolioValue}
+                dailyChange={portfolioSummary.dailyChange}
+                activeProtections={portfolioSummary.activeProtections}
+            />
+            <ProtectionIntelligenceSection />
+            <RecentActivitySection />
         </div>
-    )
+    );
 }
