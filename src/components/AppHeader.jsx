@@ -1,5 +1,7 @@
 import { useLocation } from "react-router-dom";
 import { theme } from "../theme";
+import { useNotificationStore } from "../state/notificationStore";
+import { useAppStore } from "../state/appStore";
 
 const routeMeta = {
     "/": {
@@ -35,6 +37,11 @@ const routeMeta = {
 export default function AppHeader() {
     const location = useLocation();
     const meta = routeMeta[location.pathname] || routeMeta["/"];
+    const notifications = useNotificationStore((state) => state.notifications);
+    const unreadCount = notifications.filter((item) => !item.read).length;
+    const setNotificationDrawerOpen = useAppStore(
+        (state) => state.setNotificationDrawerOpen
+    );
 
     return (
         <header className="mb-6">
@@ -57,8 +64,11 @@ export default function AppHeader() {
                         Protected Runtime
                     </div>
 
-                    <button className="px-4 py-2 rounded-2xl border border-slate-700 bg-slate-900 text-slate-300 text-sm hover:bg-slate-800 transition">
-                        Notifications
+                    <button
+                        onClick={() => setNotificationDrawerOpen(true)}
+                        className="px-4 py-2 rounded-2xl border border-slate-700 bg-slate-900 text-slate-300 text-sm hover:bg-slate-800 transition"
+                    >
+                        Notifications {unreadCount > 0 ? `(${unreadCount})` : ""}
                     </button>
 
                 </div>

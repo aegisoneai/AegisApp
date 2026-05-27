@@ -1,6 +1,8 @@
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Routes, Route, Navigate, useNavigate, useLocation } from "react-router-dom";
 import AppHeader from "./components/AppHeader";
+import { useAppStore } from "./state/appStore";
+import NotificationDrawer from "./components/NotificationDrawer";
 
 import {
   portfolioSummary,
@@ -25,6 +27,16 @@ import Sidebar from "./components/Sidebar";
 export default function AegisDashboardConcept() {
   const navigate = useNavigate();
   const location = useLocation();
+  const {
+    mobileMenuOpen,
+    showOnboarding,
+    onboardingStep,
+    notificationDrawerOpen,
+    setMobileMenuOpen,
+    setShowOnboarding,
+    setOnboardingStep,
+    setNotificationDrawerOpen,
+  } = useAppStore();
   const activeViewMap = {
     "/": "Dashboard",
     "/portfolio": "Portfolio",
@@ -37,16 +49,6 @@ export default function AegisDashboardConcept() {
 
   const activeView =
     activeViewMap[location.pathname] || "Dashboard";
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-  const [showOnboarding, setShowOnboarding] = useState(false)
-  const [onboardingStep, setOnboardingStep] = useState(1)
-  useEffect(() => {
-    const completed = localStorage.getItem("aegis-onboarding-complete")
-
-    if (!completed) {
-      setShowOnboarding(true)
-    }
-  }, [])
 
   const fullPortfolio = [
     ...positions,
@@ -213,6 +215,11 @@ export default function AegisDashboardConcept() {
           </div>
         </div>
       )}
+
+      <NotificationDrawer
+        open={notificationDrawerOpen}
+        onClose={() => setNotificationDrawerOpen(false)}
+      />
 
       <div className="min-h-screen bg-slate-950 text-white flex">
 
