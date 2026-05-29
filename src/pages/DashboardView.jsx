@@ -24,6 +24,47 @@ export default function DashboardView() {
                 status="Demo Mode Active"
                 detail="This public preview uses simulated data only. No broker connection, live trading, or runtime credentials are active."
             />
+            <DashboardPanel>
+                <div className="space-y-3">
+                    <p className="text-xl font-semibold text-slate-100">
+                        Welcome to the Aegis Demo
+                    </p>
+
+                    <p className="text-slate-300">
+                        Aegis is designed to help investors protect capital through
+                        governed automation, risk awareness, and explainable guidance.
+                    </p>
+
+                    <div className="grid gap-3 md:grid-cols-3">
+                        <div className="rounded-lg border border-slate-700 p-3">
+                            <p className="font-medium text-slate-100">
+                                Review Portfolio Health
+                            </p>
+                            <p className="text-sm text-slate-400">
+                                Understand account protection and risk posture.
+                            </p>
+                        </div>
+
+                        <div className="rounded-lg border border-slate-700 p-3">
+                            <p className="font-medium text-slate-100">
+                                Explore AI Guidance
+                            </p>
+                            <p className="text-sm text-slate-400">
+                                View explainable, protection-focused insights.
+                            </p>
+                        </div>
+
+                        <div className="rounded-lg border border-slate-700 p-3">
+                            <p className="font-medium text-slate-100">
+                                Learn the Workflow
+                            </p>
+                            <p className="text-sm text-slate-400">
+                                Experience a calm, guided investing platform.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </DashboardPanel>
 
             <DashboardSectionGrid>
                 <DashboardPanel>

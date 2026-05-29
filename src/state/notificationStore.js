@@ -1,33 +1,56 @@
 import { create } from "zustand";
 
+const defaultNotifications = [
+    {
+        id: 1,
+        title: "Protection systems active",
+        message:
+            "All monitored positions currently maintain active protection coverage.",
+        type: "success",
+        read: false,
+    },
+    {
+        id: 2,
+        title: "Aegis Guidance updated",
+        message:
+            "Current market conditions remain within governed operating ranges.",
+        type: "info",
+        read: false,
+    },
+];
+
+const savedNotifications = localStorage.getItem("aegis-notifications");
+
 export const useNotificationStore = create((set) => ({
-    notifications: [
-        {
-            id: 1,
-            title: "Protection systems active",
-            message: "All monitored positions currently maintain active protection coverage.",
-            type: "success",
-            read: false,
-        },
-        {
-            id: 2,
-            title: "Aegis Guidance updated",
-            message: "Current market conditions remain within governed operating ranges.",
-            type: "info",
-            read: false,
-        },
-    ],
+    notifications: savedNotifications
+        ? JSON.parse(savedNotifications)
+        : defaultNotifications,
 
     markAllRead: () =>
-        set((state) => ({
-            notifications: state.notifications.map((item) => ({
+        set((state) => {
+            const updated = state.notifications.map((item) => ({
                 ...item,
                 read: true,
-            })),
-        })),
+            }));
 
-    clearNotifications: () =>
+            localStorage.setItem(
+                "aegis-notifications",
+                JSON.stringify(updated)
+            );
+
+            return {
+                notifications: updated,
+            };
+        }),
+
+    clearNotifications: () => {
+        localStorage.setItem(
+            "aegis-notifications",
+            JSON.stringify([])
+        );
+
         set({
             notifications: [],
-        }),
+        });
+    },
 }));
