@@ -1,5 +1,6 @@
 import SectionCard from "../components/SectionCard";
 import StatusCard from "../components/StatusCard";
+import { demoInsights } from "../data/demo/insights";
 
 export default function ResearchView() {
     return (
@@ -30,6 +31,49 @@ export default function ResearchView() {
                         detail="Validation datasets currently processing."
                     />
 
+                </div>
+            </SectionCard>
+
+            <SectionCard
+                title="Aegis AI Insight Preview"
+                subtitle="Demo-only operational guidance based on simulated platform state."
+            >
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+
+                    <StatusCard
+                        label="Market Conditions"
+                        value={demoInsights.marketConditions}
+                        detail="Simulated market interpretation."
+                        tone="good"
+                    />
+
+                    <StatusCard
+                        label="Risk Posture"
+                        value={demoInsights.riskPosture}
+                        detail="Current demo account posture."
+                    />
+
+                    <StatusCard
+                        label="Protection Status"
+                        value={demoInsights.protectionStatus}
+                        detail="Protection systems remain healthy."
+                        tone="good"
+                    />
+
+                </div>
+
+                <div className="rounded-xl border border-slate-800 bg-slate-950/60 p-4 text-sm text-slate-300">
+                    <p className="font-semibold text-slate-100 mb-2">
+                        Recommended Action
+                    </p>
+
+                    <p className="text-emerald-300 font-medium">
+                        {demoInsights.recommendedAction}
+                    </p>
+
+                    <p className="mt-3 text-slate-400">
+                        {demoInsights.explanation}
+                    </p>
                 </div>
             </SectionCard>
 
