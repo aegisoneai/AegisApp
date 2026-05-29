@@ -1,6 +1,8 @@
 import StatusCard from "../components/StatusCard";
 import SectionCard from "../components/SectionCard";
 import DataTable from "../components/DataTable";
+import { portfolioSummary } from "../data/demo/portfolioSummary";
+import { positions } from "../data/demo/positions";
 
 export default function PortfolioView() {
     return (
@@ -13,20 +15,20 @@ export default function PortfolioView() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <StatusCard
                         label="Portfolio Value"
-                        value="$248,420"
+                        value={portfolioSummary.portfolioValue}
                         detail="Current protected account value."
                         tone="good"
                     />
 
                     <StatusCard
                         label="Open Positions"
-                        value="4"
+                        value={portfolioSummary.protectedPositions}
                         detail="Active monitored allocations."
                     />
 
                     <StatusCard
                         label="Cash Available"
-                        value="$32,180"
+                        value={portfolioSummary.accountProtectionStatus}
                         detail="Available for future governed allocation."
                     />
                 </div>
@@ -63,11 +65,11 @@ export default function PortfolioView() {
                         "Status",
                         "Protection",
                     ]}
-                    rows={[
-                        ["NVDA", "Active", "Protected"],
-                        ["AAPL", "Active", "Protected"],
-                        ["SPY", "Monitoring", "Observed"],
-                    ]}
+                    rows={positions.map((position) => [
+                        position.symbol,
+                        position.status,
+                        position.protection,
+                    ])}
                 />
             </SectionCard>
         </div>
