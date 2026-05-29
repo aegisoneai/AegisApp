@@ -1,5 +1,6 @@
 import StatusCard from "../components/StatusCard";
 import SectionCard from "../components/SectionCard";
+import { portfolioSummary } from "../data/demo/portfolioSummary";
 
 export default function ProtectionsView() {
     return (
@@ -13,7 +14,7 @@ export default function ProtectionsView() {
 
                     <StatusCard
                         label="Active Stops"
-                        value="12"
+                        value={portfolioSummary.protectedPositions}
                         detail="Monitoring live positions."
                         tone="good"
                     />
@@ -26,7 +27,7 @@ export default function ProtectionsView() {
 
                     <StatusCard
                         label="Risk State"
-                        value="Stable"
+                        value={portfolioSummary.riskPosture}
                         detail="No elevated operational warnings."
                         tone="good"
                     />
@@ -57,6 +58,31 @@ export default function ProtectionsView() {
 
                 </div>
             </SectionCard>
+
+            <SectionCard
+                title="Aegis Protection Philosophy"
+                subtitle="The foundation of the Aegis platform."
+            >
+                <div className="space-y-3 text-sm text-slate-300">
+
+                    <p>
+                        Aegis prioritizes capital protection before automation speed,
+                        strategy complexity, or opportunity capture.
+                    </p>
+
+                    <p>
+                        Protection systems are designed to reduce unnecessary risk
+                        exposure through governed controls, monitoring, and
+                        explainable guidance.
+                    </p>
+
+                    <p className="text-emerald-300 font-medium">
+                        Protection before profit.
+                    </p>
+
+                </div>
+            </SectionCard>
+
         </div>
     )
 }
