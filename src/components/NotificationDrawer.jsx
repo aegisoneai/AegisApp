@@ -22,7 +22,7 @@ export default function NotificationDrawer({
                 <div className="flex items-center justify-between mb-6">
 
                     <div>
-                        <div className="text-xl font-semibold">
+                        <div className="text-xl font-semibold text-slate-100">
                             Notifications
                         </div>
 
@@ -61,11 +61,11 @@ export default function NotificationDrawer({
                         <div
                             key={item.id}
                             className={`rounded-2xl border p-4 ${item.read
-                                    ? "border-slate-800 bg-slate-900/40"
-                                    : "border-emerald-500/30 bg-emerald-500/10"
+                                ? "border-slate-800 bg-slate-900/40"
+                                : "border-emerald-500/30 bg-emerald-500/10"
                                 }`}
                         >
-                            <div className="font-medium">
+                            <div className="font-semibold text-slate-100">
                                 {item.title}
                             </div>
 

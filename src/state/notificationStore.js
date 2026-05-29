@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { demoNotifications } from "../data/demo/notifications";
 
 const defaultNotifications = [
     {
@@ -24,7 +25,7 @@ const savedNotifications = localStorage.getItem("aegis-notifications");
 export const useNotificationStore = create((set) => ({
     notifications: savedNotifications
         ? JSON.parse(savedNotifications)
-        : defaultNotifications,
+        : demoNotifications,
 
     markAllRead: () =>
         set((state) => {
